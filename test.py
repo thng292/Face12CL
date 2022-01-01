@@ -5,8 +5,8 @@ import mediapipe as mp
 import datetime
 
 faceDect = mp.solutions.face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.7)
-
-img = cv2.imread("D:/Thong/Project/FaceAttend/Dat/vlcsnap-2021-08-30-17h02m37s429.png")
+cv2.namedWindow("test",cv2.WINDOW_AUTOSIZE)
+img = cv2.imread("E:/Thong/FaceDect/Face12CL/Original/ALL/IMG_3587-2.jpg")
 #cv2.imshow("test",img)
 #crop here
 procframe = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)

@@ -7,8 +7,8 @@ cnt = 0
 faceDect = mp.solutions.face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.6)
 
 for i in range(1,34) :
-    for id,filename in enumerate(os.listdir("./Dat"+"/"+str(i))):
-        img = cv2.imread(os.path.join("Dat"+"/"+str(i),filename))
+    for id,filename in enumerate(os.listdir("./Original"+"/"+str(i))):
+        img = cv2.imread(os.path.join("Original"+"/"+str(i),filename))
         #img = cv2.imread("E:/vlcsnap-2021-12-13-18h27m14s586.png")
         #cv2.imshow("test",img)
         if img is not None:
