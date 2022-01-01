@@ -20,7 +20,6 @@ for i in range(1,34) :
             if results.detections :
                 for face in results.detections:
                     box = face.location_data.relative_bounding_box
-                    #center base
                     xl = int(box.xmin*w)-20
                     yl = int(box.ymin*h)-20
                     iw = int(box.width*w)+40

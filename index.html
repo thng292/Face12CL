@@ -1,8 +1,57 @@
 <!DOCTYPE html>
+<html>
+
 <head>
-    <title>12CL Điểm Danh</title>
+    <meta charset="utf-8">
+
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.1/control_utils.css"
+        crossorigin="anonymous">
+    <!-- <link rel="stylesheet" type="text/css" href="demo.css" crossorigin="anonymous"> -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.1/camera_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.1/control_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.1/drawing_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.0/face_detection.js"
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+    <!-- CONTENTS -->
+    <div class="container" style="margin-top: 20px;">
+        <div class="columns">
+            <!-- WEBCAM INPUT -->
+            <div class="column" style="visibility: hidden; position: absolute;">
+                <article class="panel is-info">
+                    <p class="panel-heading">
+                        Webcam Input
+                    </p>
+                    <div class="panel-block">
+                        <video class="input_video1"></video>
+                    </div>
+                </article>
+            </div>
+            <!-- MEDIAPIPE OUTPUT -->
+            <div class="column">
+                <article class="panel is-info">
+                    <p class="panel-heading">
+                        Mediapipe Face Detection
+                    </p>
+                    <div class="panel-block">
+                        <canvas class="output1" width="480px" height="480px"></canvas>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+    </div>
+    <button onclick="showControl()">Toggle control</button>
+
+    <div style="visibility: hidden;" class="control1">
+    <script type="text/javascript" src="CLFaces.js"></script>
 </body>
+
+</html>
