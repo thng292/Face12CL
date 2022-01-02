@@ -3,10 +3,24 @@ const out1 = document.getElementsByClassName('output1')[0];
 const controlsElement1 = document.getElementsByClassName('control1')[0];
 const canvasCtx1 = out1.getContext('2d');
 const fpsControl = new FPS();
-const h = 480;
-const w = 480;
 const padd = 20;
 canvasCtx1.font = "30px Cambria"
+
+var h = prompt("Height", "480")
+var w = prompt("Width", "480")
+if (parseInt(h)==NaN) {
+    h = 480;
+} else {
+    h = parseInt(h);
+}
+if (parseInt(w)==NaN) {
+    w = 480;
+} else {
+    w = parseInt(w);
+}
+
+out1.setAttribute("width", w);
+out1.setAttribute("height", h);
 
 showed = 0;
 function showControl() {
@@ -21,8 +35,8 @@ function showControl() {
 
 function draw(bbox, text) {
     console.log(text)
-    x = bbox.xCenter * w - bbox.width * w / 2 - padd;
-    y = bbox.yCenter * h-bbox.height*h/2-padd
+    var x = bbox.xCenter * w - bbox.width * w / 2 - padd;
+    var y = bbox.yCenter * h-bbox.height*h/2-padd
     canvasCtx1.beginPath();
     canvasCtx1.fillStyle = 'red';
     canvasCtx1.fillText(text, x, y-5);
@@ -44,6 +58,7 @@ function onResultsFace(results) {
         draw(results.detections[i].boundingBox,"unknown" + i);
     }
     canvasCtx1.restore();
+    debugger;
 }
 
 const faceDetection = new FaceDetection({

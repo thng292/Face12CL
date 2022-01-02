@@ -3,24 +3,21 @@ import numpy as np
 import os
 import mediapipe as mp
 import datetime
-
-faceDect = mp.solutions.face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.7)
-cv2.namedWindow("test",cv2.WINDOW_AUTOSIZE)
-img = cv2.imread("E:/Thong/FaceDect/Face12CL/Original/16/269115182_249968220576190_2392040812908850549_n.jpg")
-#cv2.imshow("test",img)
-#crop here
-procframe = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-results = faceDect.process(procframe)
-h,w,d = img.shape
-print(h,w)
-if results.detections :
-    for face in results.detections:
-        box = face.location_data.relative_bounding_box
-        bbox = int(box.xmin*w), int(box.ymin*h),\
-                int(box.width*w), int(box.height*h)
-        cv2.circle(img,(bbox[0],bbox[1]),5,(255,0,255),5)
-        cv2.rectangle(img,bbox,(255,0,255),2)
-cv2.imshow("test",img)
-cv2.waitKey(0)
-
-cv2.destroyAllWindows()
+cnt = 0
+faceDect = mp.solutions.face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.4)
+for i in range(1,19) :
+    img = cv2.imread("E:/Thong/FaceDect/Face12CL/Original/ALL/" + str(i) + ".jpg")
+    if img :
+        procframe = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+        results = faceDect.process(procframe)
+        h,w,d = img.shape
+        if results.detections :
+            for id,face in enumerate(results.detections) :
+                box = face.location_data.relative_bounding_box
+                xl = int(box.xmin*w)
+                yl = int(box.ymin*h)
+                iw = int(box.width*w)
+                ih = int(box.height*h)
+                cropimg = img[max(yl,0):min(yl+ih,h),max(0,xl):min(xl+iw,w)]
+                cv2.imwrite("u"+str(cnt)+".jpg",cv2.resize(cropimg,(200,200)))
+                cnt+=1

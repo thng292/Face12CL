@@ -4,9 +4,9 @@ import os
 import mediapipe as mp
 import datetime
 cnt = 0
-faceDect = mp.solutions.face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.6)
+faceDect = mp.solutions.face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.4)
 
-for i in range(1,34) :
+for i in range(5,6) :
     for id,filename in enumerate(os.listdir("./Original"+"/"+str(i))):
         img = cv2.imread(os.path.join("Original"+"/"+str(i),filename))
         #img = cv2.imread("E:/vlcsnap-2021-12-13-18h27m14s586.png")
@@ -20,17 +20,10 @@ for i in range(1,34) :
             if results.detections :
                 for face in results.detections:
                     box = face.location_data.relative_bounding_box
-                    xl = int(box.xmin*w)-20
-                    yl = int(box.ymin*h)-20
-                    iw = int(box.width*w)+40
-                    ih = int(box.height*h)+40
-                    #cv2.rectangle(img,bbox,(255,0,255),2)
-                    #print(min(xl,yl),max(xl,yl), min(xr,yr),max(xr,yr))
+                    xl = int(box.xmin*w)
+                    yl = int(box.ymin*h)
+                    iw = int(box.width*w)
+                    ih = int(box.height*h)
                     cropimg = img[max(yl,0):min(yl+ih,h),max(0,xl):min(xl+iw,w)]
-                    #print(cropimg)
-                    #cv2.imshow("test",cropimg)
-                    cv2.imwrite(str(cnt)+'.png',cropimg)
+                    cv2.imwrite(str(cnt)+'.png',cv2.resize(cropimg,(200,200)))
                     cnt+=1
-                    cv2.waitKey(0)
-
-cv2.destroyAllWindows()
