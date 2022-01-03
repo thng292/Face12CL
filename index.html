@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html>
-
+    
 <head>
     <meta charset="utf-8">
-    <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.1/control_utils.css" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" type="text/css" href="demo.css" crossorigin="anonymous"> -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.1/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.1/control_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.1/drawing_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.0/face_detection.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.1/control_utils.css">
 </head>
 
 <body>
@@ -27,8 +21,15 @@
         </article>
     </div>
     <button onclick="showControl()">Toggle control</button>
-
+    <button onclick="changeCanvas()">Change canvas size</button>
+    <button onclick="debugger">Pause</button>
+    <canvas id="cimg"  width="200px" height="200px"></canvas>
     <div style="visibility: hidden;" class="control1"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.1/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.1/control_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.0/face_detection.js"></script>
     <script type="text/javascript" src="CLFaces.js"></script>
 </body>
 

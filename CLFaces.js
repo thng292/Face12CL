@@ -1,65 +1,62 @@
 const video1 = document.getElementsByClassName('input_video1')[0];
 const out1 = document.getElementsByClassName('output1')[0];
-const controlsElement1 = document.getElementsByClassName('control1')[0];
-const canvasCtx1 = out1.getContext('2d');
-const fpsControl = new FPS();
+const control = document.getElementsByClassName('control1')[0];
+const ctx1 = out1.getContext('2d');
+const face = document.getElementById("cimg");
+const ctx2 = face.getContext("2d");
+const fps = new FPS();
 const padd = 20;
-canvasCtx1.font = "30px Cambria"
+ctx1.font = "30px Cambria";
 
-var h = prompt("Height", "480")
-var w = prompt("Width", "480")
-if (parseInt(h)==NaN) {
-    h = 480;
-} else {
-    h = parseInt(h);
+var h = 480;
+var w = 480;
+
+function changeCanvas() {
+    var he = prompt("Height", "480");
+    var wi = prompt("Width", "480");
+    if (parseInt(h) == NaN) {
+        h = 480;
+    } else {
+        h = parseInt(he);
+    }
+    if (parseInt(w) == NaN) {
+        w = 480;
+    } else {
+        w = parseInt(wi);
+    }
+    out1.setAttribute("width", w.toString() + "px");
+    out1.setAttribute("height", h.toString() + "px");
 }
-if (parseInt(w)==NaN) {
-    w = 480;
-} else {
-    w = parseInt(w);
-}
-
-out1.setAttribute("width", w);
-out1.setAttribute("height", h);
-
 showed = 0;
 function showControl() {
     if (showed) {
-        controlsElement1.style.visibility = "hidden";
+        control.style.visibility = "hidden";
         showed = 0;
     } else {
-        controlsElement1.style.visibility = "visible";
+        control.style.visibility = "visible";
         showed = 1;
     }
 }
 
-function draw(bbox, text) {
-    console.log(text)
-    var x = bbox.xCenter * w - bbox.width * w / 2 - padd;
-    var y = bbox.yCenter * h-bbox.height*h/2-padd
-    canvasCtx1.beginPath();
-    canvasCtx1.fillStyle = 'red';
-    canvasCtx1.fillText(text, x, y-5);
-    canvasCtx1.beginPath();
-    canvasCtx1.fillStyle = '#00000000';
-    canvasCtx1.fill();
-    canvasCtx1.lineWidth = 4;
-    canvasCtx1.strokeStyle = 'blue';
-    canvasCtx1.rect(x,y, bbox.width*w+padd*2, bbox.height*h+padd*2);
-    canvasCtx1.stroke();
+function draw(x, y, ww, hh) {
+    x -= padd;
+    y -= padd;
+    ctx1.beginPath();
+    ctx1.fillStyle = '#00000000';
+    ctx1.fill();
+    ctx1.lineWidth = 4;
+    ctx1.strokeStyle = 'blue';
+    ctx1.rect(x,y, ww+padd*2, hh+padd*2);
+    ctx1.stroke();
 }
 
-function onResultsFace(results) {
-    fpsControl.tick();
-    canvasCtx1.save();
-    canvasCtx1.clearRect(0, 0, out1.width, out1.height);
-    canvasCtx1.drawImage(results.image, 0, 0, out1.width, out1.height);
-    for (i = 0; i < results.detections.length; i++) {
-        draw(results.detections[i].boundingBox,"unknown" + i);
-    }
-    canvasCtx1.restore();
-    debugger;
+var model;
+async function init(URL) {
+    const modelURL = URL + "model.json";
+    const metadataURL = URL + "metadata.json";
+    model = await tmImage.load(modelURL, metadataURL);
 }
+
 
 const faceDetection = new FaceDetection({
     locateFile: (file) => {
@@ -69,21 +66,21 @@ const faceDetection = new FaceDetection({
 faceDetection.onResults(onResultsFace);
 
 const camera = new Camera(video1, {
-    onFrame: async () => {
+    onFrame: async() => {
         await faceDetection.send({ image: video1 });
     },
     width: w,
     height: h
 });
-camera.start();
 
-new ControlPanel(controlsElement1, {
+
+new ControlPanel(control, {
     selfieMode: true,
     minDetectionConfidence: 0.5,
 })
     .add([
         new StaticText({ title: 'Control Panel' }),
-        fpsControl,
+        fps,
         new Toggle({ title: 'Selfie Mode', field: 'selfieMode' }),
         new Slider({
             title: 'Min Detection Confidence',
@@ -96,3 +93,38 @@ new ControlPanel(controlsElement1, {
         video1.classList.toggle('selfie', options.selfieMode);
         faceDetection.setOptions(options);
     });
+async function onResultsFace(results) {
+    fps.tick();
+    //ctx1.save();
+    ctx1.drawImage(results.image, 0, 0, out1.width, out1.height);
+    for (i = 0; i < results.detections.length; i++) {
+        bbox = results.detections[i].boundingBox;
+        var ww = bbox.width * w;
+        var hh = bbox.height * h
+        var x = bbox.xCenter * w - ww / 2;
+        var y = bbox.yCenter * h - hh / 2;
+        ctx2.drawImage(results.image, x, y, ww, hh, 0, 0, 200, 200);
+        draw(x, y, ww, hh);
+        var prediction = await model.predictTopK(face, 1, 0);
+        ctx2.clearRect(0, 0, 200, 200);
+        if (prediction[0].probability.toFixed(2) < 0.3) {
+            x -= padd;
+            y -= padd;
+            ctx1.beginPath();
+            ctx1.fillStyle = 'red';
+            ctx1.fillText("lạ hoắc", x, y-5);
+            console.log("lạ hoắc")
+        } else {
+            x -= padd;
+            y -= padd;
+            ctx1.beginPath();
+            ctx1.fillStyle = 'red';
+            ctx1.fillText(prediction[0].className + ": " + prediction[0].probability.toFixed(2), x, y-5);
+            console.log(prediction[0].className + ": " + prediction[0].probability.toFixed(2))
+        }
+    }
+    ctx1.clearRect(0, 0, out1.width, out1.height);
+    //ctx1.restore();
+}
+init("https://teachablemachine.withgoogle.com/models/LqN_AW69L/");
+camera.start();
